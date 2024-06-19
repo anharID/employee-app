@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../api';
 
-const LoginScreen = ({ navigation }) => {
-    const [username, setUsername] = useState('');
+const LoginScreen = ({ setToken, setUsername }) => {
+    const [username, setUsernameLocal] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
@@ -16,10 +15,9 @@ const LoginScreen = ({ navigation }) => {
 
         api.post('/login.php', { username, password })
             .then(async (response) => {
-                console.log(response.data.success);
                 if (response.data.success) {
-                    await AsyncStorage.setItem('userToken', response.data.token);
-                    navigation.navigate('HomeTabs');
+                    await setToken(response.data.token);
+                    setUsername(username); // Set nama pengguna di sini
                 } else {
                     setError('Username atau Password salah.');
                 }
@@ -37,7 +35,7 @@ const LoginScreen = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Username"
                 value={username}
-                onChangeText={setUsername}
+                onChangeText={setUsernameLocal}
             />
             <TextInput
                 style={styles.input}

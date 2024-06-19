@@ -11,29 +11,35 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
+  const [username, setUsername] = useState('')
 
   useEffect(() => {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('userToken');
       setUserToken(token);
-      setIsLoading(false);
     };
     checkToken();
   }, []);
 
-  if (isLoading) {
-    return null; // Atau tampilkan layar loading
-  }
+  const setToken = async (token) => {
+    if (token) {
+      await AsyncStorage.setItem('userToken', token);
+    } else {
+      await AsyncStorage.removeItem('userToken')
+      setUsername('');
+    }
+    setUserToken(token);
+  };
 
   const HomeTabs = () => (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home">
+        {props => <HomeScreen {...props} username={username} logout={() => setToken(null)} />}
+      </Tab.Screen>
       <Tab.Screen name="EmployeeList" component={EmployeeListScreen} />
     </Tab.Navigator>
   );
-
 
   return (
     <NavigationContainer>
@@ -43,10 +49,10 @@ export default function App() {
             <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
           </>
         ) : (
-          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Login" options={{ headerShown: false }}>
+            {props => <LoginScreen {...props} setUsername={setUsername} setToken={setToken} />}
+          </Stack.Screen>
         )}
-
-
       </Stack.Navigator>
     </NavigationContainer>
   );
