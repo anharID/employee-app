@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import api from '../../api';
 
@@ -37,27 +37,90 @@ const HomeScreen = ({ username, logout }) => {
         }, [])
     );
 
+    const handleLogout = () => {
+        Alert.alert(
+            "Konfirmasi Logout",
+            "Apakah Anda yakin ingin logout?",
+            [
+                {
+                    text: "Batal",
+                    style: "cancel"
+                },
+                {
+                    text: "Logout",
+                    onPress: logout
+                }
+            ]
+        );
+    };
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Selamat Datang, {username}</Text>
-            <Text>Total Karyawan: {totalEmployees}</Text>
-            {Object.keys(divisionCount).map(division => (
-                <Text key={division}>{division}: {divisionCount[division]}</Text>
-            ))}
-            <Button title="Logout" onPress={logout} />
-        </View>
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Selamat Datang, {username}</Text>
+                <Button title="Logout" onPress={handleLogout} color='red' />
+            </View>
+            <Text style={styles.subtitle}>Total Karyawan: {totalEmployees}</Text>
+            <View style={styles.cardContainer}>
+                {Object.keys(divisionCount).map(division => (
+                    <View key={division} style={styles.card}>
+                        <Text style={styles.cardTitle}>{division}</Text>
+                        <Text style={styles.cardCount}>{divisionCount[division]} </Text>
+                    </View>
+                ))}
+            </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
+        flexGrow: 1,
+        padding: 20,
+        backgroundColor: '#f5f5f5',
+    },
+    header: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        marginBottom: 20,
     },
     title: {
         fontSize: 24,
+        fontWeight: 'bold',
+    },
+    subtitle: {
+        fontSize: 18,
         marginBottom: 20,
+    },
+    cardContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    card: {
+        width: '48%',
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        padding: 20,
+        marginBottom: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    cardTitle: {
+        fontSize: 18,
+        marginBottom: 10,
+        fontWeight: 'bold',
+    },
+    cardCount: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'blue',
     },
 });
 

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
 import api from '../../api';
+
+// Impor gambar logo
+import logo from '../../assets/logo.png';
 
 const LoginScreen = ({ setToken, setUsername }) => {
     const [username, setUsernameLocal] = useState('');
@@ -30,6 +33,8 @@ const LoginScreen = ({ setToken, setUsername }) => {
 
     return (
         <View style={styles.container}>
+            <Image source={logo} style={styles.logo} />
+
             <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.input}
@@ -48,6 +53,7 @@ const LoginScreen = ({ setToken, setUsername }) => {
             <Button
                 title="Login"
                 onPress={handleLogin}
+                color='blue'
             />
         </View>
     );
@@ -59,6 +65,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+    },
+    logo: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
     },
     title: {
         fontSize: 24,
