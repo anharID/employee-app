@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Button, ScrollView, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import api from '../../api';
+import api from '../api';
 
 const HomeScreen = ({ username, logout }) => {
     const [totalEmployees, setTotalEmployees] = useState(0);
@@ -65,7 +65,7 @@ const HomeScreen = ({ username, logout }) => {
                 {Object.keys(divisionCount).map(division => (
                     <View key={division} style={styles.card}>
                         <Text style={styles.cardTitle}>{division}</Text>
-                        <Text style={styles.cardCount}>{divisionCount[division]} </Text>
+                        <Text style={styles.cardCount}>{divisionCount[division]}</Text>
                     </View>
                 ))}
             </View>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import api from '../../api';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import api from '../api';
 
 const EmployeeListScreen = () => {
     const [employees, setEmployees] = useState([]);
@@ -95,18 +96,26 @@ const EmployeeListScreen = () => {
     return (
         <View style={styles.container}>
             <View style={styles.card}>
+                <View style={styles.tableHeader}>
+                    <Text style={[styles.tableCell, styles.headerText]}>Nama</Text>
+                    <Text style={[styles.tableCell, styles.headerText]}>Divisi</Text>
+                    <Text style={[styles.tableCell, styles.headerText]}>Aksi</Text>
+                </View>
                 <FlatList
                     data={employees}
                     keyExtractor={item => item.id.toString()}
                     renderItem={({ item }) => (
-                        <View style={styles.employeeContainer}>
-                            <Text style={styles.item}>{item.name} - {item.division}</Text>
-                            <TouchableOpacity onPress={() => handleEditEmployee(item)}>
-                                <Text style={styles.editButton}>Edit</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleDeleteEmployee(item.id)}>
-                                <Text style={styles.deleteButton}>Hapus</Text>
-                            </TouchableOpacity>
+                        <View style={styles.tableRow}>
+                            <Text style={styles.tableCell}>{item.name}</Text>
+                            <Text style={styles.tableCell}>{item.division}</Text>
+                            <View style={[styles.tableCell, styles.actionsCell]}>
+                                <TouchableOpacity onPress={() => handleEditEmployee(item)} style={styles.iconButton}>
+                                    <Icon name="edit" size={20} color="blue" />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleDeleteEmployee(item.id)} style={styles.iconButton}>
+                                    <Icon name="delete" size={20} color="red" />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     )}
                 />
@@ -173,10 +182,6 @@ const styles = StyleSheet.create({
         width: '100%',
         margin: 0
     },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
-    },
     input: {
         height: 40,
         borderColor: 'gray',
@@ -191,24 +196,43 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 12,
     },
-    employeeContainer: {
+    tableHeader: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: 'gray',
+        paddingBottom: 10,
     },
-    item: {
+    tableRow: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
+        paddingVertical: 5,
+    },
+    tableCell: {
         flex: 1,
+        textAlign: 'center',
+        paddingVertical: 5,
+    },
+    headerText: {
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    actionsCell: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    iconButton: {
+        marginHorizontal: 5,
+        paddingHorizontal: 5,
     },
     editButton: {
         color: 'blue',
-        marginHorizontal: 5,
+        marginHorizontal: 2,
     },
     deleteButton: {
         color: 'red',
-        marginHorizontal: 5,
+        marginHorizontal: 2,
     },
     error: {
         color: 'red',

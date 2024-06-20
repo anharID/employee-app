@@ -3,34 +3,46 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/Ionicons'; // Import Icon from react-native-vector-icons
-import LoginScreen from './src/screens/LoginScreen';
-import HomeScreen from './src/screens/HomeScreen';
-import EmployeeListScreen from './src/screens/EmployeeListScreen';
+import Icon from 'react-native-vector-icons/Ionicons';
+import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
+import EmployeeListScreen from './screens/EmployeeListScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
   const [userToken, setUserToken] = useState(null);
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const checkToken = async () => {
+    const checkStorage = async () => {
       const token = await AsyncStorage.getItem('userToken');
+      const storedUsername = await AsyncStorage.getItem('username');
       setUserToken(token);
+      setUsername(storedUsername || '');
     };
-    checkToken();
+    checkStorage();
   }, []);
 
   const setToken = async (token) => {
     if (token) {
       await AsyncStorage.setItem('userToken', token);
     } else {
-      await AsyncStorage.removeItem('userToken')
+      await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('username');
       setUsername('');
     }
     setUserToken(token);
+  };
+
+  const setUsernameInStorage = async (name) => {
+    setUsername(name);
+    if (name) {
+      await AsyncStorage.setItem('username', name);
+    } else {
+      await AsyncStorage.removeItem('username');
+    }
   };
 
   const HomeTabs = () => (
@@ -67,7 +79,7 @@ export default function App() {
           </>
         ) : (
           <Stack.Screen name="Login" options={{ headerShown: false }}>
-            {props => <LoginScreen {...props} setUsername={setUsername} setToken={setToken} />}
+            {props => <LoginScreen {...props} setUsername={setUsernameInStorage} setToken={setToken} />}
           </Stack.Screen>
         )}
       </Stack.Navigator>

@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
-import api from '../../api';
-
-// Impor gambar logo
-import logo from '../../assets/logo.png';
+import api from '../api';
+import logo from '../assets/logo.png';
 
 const LoginScreen = ({ setToken, setUsername }) => {
     const [username, setUsernameLocal] = useState('');
@@ -20,7 +18,7 @@ const LoginScreen = ({ setToken, setUsername }) => {
             .then(async (response) => {
                 if (response.data.success) {
                     await setToken(response.data.token);
-                    setUsername(username); // Set nama pengguna di sini
+                    setUsername(username); // Set username in AsyncStorage
                 } else {
                     setError('Username atau Password salah.');
                 }
@@ -35,7 +33,7 @@ const LoginScreen = ({ setToken, setUsername }) => {
         <View style={styles.container}>
             <Image source={logo} style={styles.logo} />
 
-            <Text style={styles.title}>Login</Text>
+            <Text style={styles.title}>Login Employee App</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Username"
